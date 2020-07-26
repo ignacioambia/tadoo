@@ -1,12 +1,10 @@
 <template>
   <v-app>
     <v-main >
+
         <v-container  style="height : 100%"  fluid>
           <v-row style="height : 100%">
             <v-col cols="8" class="grey lighten-5" >
-              <div class="test">
-                
-              </div>
             </v-col>
             <v-col cols="4" class="shadow">
 
@@ -19,7 +17,11 @@
 
               <pending v-for="pending in pendings" :key="pending">{{pending}}</pending>
 
-              <!-- <chkbox class="red"> test </chkbox> -->
+              <txt-area content="Content goes here anything"></txt-area>
+              <txt-area></txt-area>
+
+             
+
 
   
 
@@ -34,13 +36,11 @@
 <script>
 
 import Pending from './components/Pending'
-// import chkbox from './components/chkbox'
-
 export default {
   name: 'App',
 
   components: {
-    Pending, // chkbox
+    Pending
   },
 
   data: () => ({
@@ -59,14 +59,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// @import "./styles/_variables.scss";
 
-.test{
-  width: 100px;
-  height: 100px;
-  background-color: $primary;
-  position: absolute;
-}
 .container{
   padding : 0px 12px;
 }

@@ -56,7 +56,7 @@ export default {
     }
 
     .not-selected{
-        border : 2px solid #428DFF
+        border : 2px solid $primary
 
     }
 
@@ -79,50 +79,5 @@ export default {
 
 
 }
-// :root{
-//     position: absolute;
-//     label{
-//         position : relative
-//     }
 
-//     span{
-//         width : 26px;
-//         height : 26px;
-//         margin : 5px;
-//         border : 2px solid #428DFF;
-//         display: inline-block;
-//         border-radius: 50%;
-//         transition : all linear 0.3s;
-
-//         &:after{
-//             content : "";
-//             position: absolute;
-//             top: -15px;
-//             left: 15px;
-//             border-bottom: 3px solid white;
-//             border-right: 3px solid white;
-//             width: 8px;
-//             height: 16px;
-//             visibility: hidden;
-//             transform : rotate(45deg)
-
-//         }
-
-
-//     }
-
-
-
-//     input {
-//         display : none;
-//         &:checked ~ span {
-//             background-color : #ccc;
-//             border-color: #ccc;
-//             &:after{
-//                 visibility: visible;
-//             }
-
-//         }
-//     }
-// }
 </style>
