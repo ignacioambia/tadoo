@@ -5,26 +5,22 @@
         <v-container  style="height : 100%"  fluid>
           <v-row style="height : 100%">
             <v-col cols="8" class="grey lighten-5" >
+
+              <v-btn color="success" @click="saveToLocalStorage">Save</v-btn>
+
+              <v-snackbar v-model="snackbar" timeout="2000">
+                <div class="text-center">
+                  Information is now saved
+                </div>
+                
+              </v-snackbar>
             </v-col>
             <v-col cols="4" class="shadow">
+                <pending :pending="pending" open list >
 
-              <v-text-field dense filled placeholder="new pending"
-              prepend-inner-icon="fas fa-plus"
-              @keyup.enter="enterClicked"
-              v-model="new_pending"
-              >                    
-              </v-text-field>
+                </pending>
 
-              <pending v-for="pending in pendings" :key="pending">{{pending}}</pending>
-
-              <txt-area content="Content goes here anything"></txt-area>
-              <txt-area></txt-area>
-
-             
-
-
-  
-
+ 
             </v-col>
           </v-row>
 
@@ -34,8 +30,8 @@
 </template>
 
 <script>
-
 import Pending from './components/Pending'
+
 export default {
   name: 'App',
 
@@ -45,15 +41,27 @@ export default {
 
   data: () => ({
     new_pending : '',
-    pendings : ["My pending"]
+    pending : {},
+    snackbar :  false
   }),
 
   methods : {
-    enterClicked(){
-      console.log('New pending entered : ' + this.new_pending)
-      this.pendings.push(this.new_pending)
-      this.new_pending = ''
+    saveToLocalStorage(){
+      localStorage.setItem('tadoo',JSON.stringify(this.pending))
+      this.snackbar = true
+      
+      
     }
+  },
+
+  watch : {
+    pending(){
+      console.log('Something changed in pending list')
+    }
+  },
+
+  mounted(){
+    this.pending = JSON.parse(localStorage.getItem('tadoo'))
   }
 };
 </script>

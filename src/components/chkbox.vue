@@ -1,5 +1,5 @@
 <template>
-<div @click="toggle">
+<div @click.stop="toggle">
    
     <div class="checkbox" :class="checkboxSelected">
 

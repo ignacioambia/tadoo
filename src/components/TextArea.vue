@@ -23,12 +23,6 @@ export default {
     }
   },
 
-  watch:{
-    textAreaContent(){
-      console.log(this.textAreaContent)
-    }
-  },
-
   props : {
     content :{
       type: String,

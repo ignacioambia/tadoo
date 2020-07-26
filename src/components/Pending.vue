@@ -1,40 +1,59 @@
 <template>
 <div class="pending-container">
     <hr style="background-color : #ccc;">
-    <div class="pending-header">
+    <div class="pending-header" @click="toggleDetails">
         <div class="d-flex align-center">
-            <div class="mr-2">
-                <chkbox class="" @checkbox-toggle="togglePending"></chkbox>
+            <div class="mr-1" style="min-width : 30px;min-height: 30px;">
+                <div v-if="!isList"  > 
+                    <chkbox   @checkbox-toggle="togglePending"></chkbox>
+                </div>
+                <div v-else style="font-size : 20px;">
+                    <i class="fas fa-list-ul"></i>
+                </div>            
             </div>
 
+            
+            
             <div class="pending" :class="pendingCrossedClass">
                 <div >
-                    <slot ></slot>
+                    {{pending.title}}
                 </div>  
                 
             </div>
         </div>
 
 
-        <div class="convert-to-list-btn" >
+        <div @click="convertToList" class="convert-to-list-btn noselect" v-show="pendingDetailsOpen && !isList" >
             <span class="icon"><i  class="fas fa-list-ul"></i></span>
             <span style="color : #428DFF;font-size: 14px;">Convert to list</span>
         </div>
       
-  </div>
-  <div class="pending-details">
-    <div class="d-flex justify-space-between mb-1 mt-1">
-        <div>
-
-        </div>
-        <div class="text--secondary font-italic">
-            no due date
-        </div>
     </div>
-    
-    <txt-area class="mb-2"></txt-area>
-  
-  </div>
+    <div class="pending-details" v-show="pendingDetailsOpen" >
+        <div class="list-section mt-5" v-if="isList">
+            <pending-input @create-new-pending="pushPending" ></pending-input>
+
+            <pending
+                @delete-pending="deletePending(index)"
+                v-for="(pending,index) in pending.children" 
+                :pending="pending"
+                :key="index">
+            </pending>
+        </div>
+
+        <div style="margin-top : 40px;">
+            <text-area class="mb-2" :content="pending.description"></text-area>         
+            <div class="d-flex justify-space-between mb-1 mt-1">
+                <div class="delete-pending" @click="$emit('delete-pending')">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <div class="text--secondary font-italic">
+                    no due date
+                </div>
+            </div> 
+        </div>
+
+    </div>
 
 
   <hr style="background-color : #ccc;">
@@ -44,22 +63,57 @@
 
 <script>
 import chkbox from './chkbox'
-import txtArea from './txtArea'
+import TextArea from './TextArea'
+import PendingInput from './PendingInput'
 
 export default {
-    components : {chkbox, txtArea},
-
+    name : 'pending',
+    components : {chkbox, TextArea, PendingInput},
+    props : {
+        pending : Object,
+        list : {
+            type : Boolean,
+            default : false
+        },
+        open : {
+            type : Boolean,
+            default : false
+        }
+    },
     data(){
+
         return {
-            crossed : false
+            crossed : false,
+            pendingDetailsOpen : false,
+            isList : false
         }
     },
 
     methods : {
         togglePending(value){
-            // console.log('Toggling pending : ' + value)
             this.crossed = value
+            if(this.crossed){
+                this.pendingDetailsOpen = false
+            }
+        },
+
+        toggleDetails(){
+            this.pendingDetailsOpen = !this.pendingDetailsOpen
+        },
+
+        convertToList(){
+           this.isList = !this.isList
+           console.log(this.isList)
+        },
+
+        pushPending(pending){
+            this.pending.children.push(pending)
+        },
+
+        deletePending(index){
+            this.pending.children.splice(index,1)
         }
+
     },
 
     computed : {
@@ -70,6 +124,16 @@ export default {
             }
             return ''
         }
+    },
+
+    mounted(){
+        this.isList = this.list
+
+        console.log('List : ' + this.list)
+        this.pendingDetailsOpen = this.open
+
+        console.log(this.pendingDetailsOpen)
+        console.log(this.open)
     }
 
 
@@ -82,6 +146,7 @@ export default {
     justify-content: space-between;
     padding : 0.5em;
     background-image:linear-gradient(transparent,$gray 300%);
+    min-height: 30px;
 
 }
 
@@ -115,7 +180,13 @@ hr{
 }
 
 .pending-container{
-    background-color: #F8F9F9;
+    //background-color: #F8F9F9;
+    background-color: white;
+}
+
+.delete-pending{
+    color : $dark-gray;
+    cursor: pointer;
 }
 
 </style>
