@@ -6,17 +6,13 @@
           <v-row style="height : 100%">
             <v-col cols="8" class="grey lighten-5" >
 
-              <v-btn color="success" @click="saveToLocalStorage">Save</v-btn>
-
-              <v-snackbar v-model="snackbar" timeout="2000">
-                <div class="text-center">
-                  Information is now saved
-                </div>
-                
-              </v-snackbar>
             </v-col>
             <v-col cols="4" class="shadow">
-                <pending :pending="pending" open list >
+                <pending 
+                  @info-changed="saveChanges"
+                  v-for="(pending, index) in pendings" 
+                  :key="index" :pending="pending" 
+                  open list >
 
                 </pending>
 
@@ -41,27 +37,32 @@ export default {
 
   data: () => ({
     new_pending : '',
-    pending : {},
+    pendings : [],
     snackbar :  false
   }),
 
   methods : {
-    saveToLocalStorage(){
-      localStorage.setItem('tadoo',JSON.stringify(this.pending))
-      this.snackbar = true
-      
-      
-    }
-  },
-
-  watch : {
-    pending(){
-      console.log('Something changed in pending list')
+    saveChanges(){
+      localStorage.setItem('tadoo',JSON.stringify(this.pendings))
     }
   },
 
   mounted(){
-    this.pending = JSON.parse(localStorage.getItem('tadoo'))
+    let pendings = JSON.parse(localStorage.getItem('tadoo'))
+
+    //if there are no pendings, we initialize the list with an empty value
+    if(pendings){
+      this.pendings = JSON.parse(localStorage.getItem('tadoo'))
+    }else{
+      this.pendings = [{"title":"My pendings","description":"","children":[]}]
+    }
+
+    window.onbeforeunload = ()=>{
+      this.saveChanges()
+    } 
+    
+
+    
   }
 };
 </script>

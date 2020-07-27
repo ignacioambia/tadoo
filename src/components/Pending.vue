@@ -33,7 +33,7 @@
         <div class="list-section mt-5" v-if="isList">
             <pending-input @create-new-pending="pushPending" ></pending-input>
 
-            <pending
+            <pending @info-changed="$emit('info-changed')"
                 @delete-pending="deletePending(index)"
                 v-for="(pending,index) in pending.children" 
                 :pending="pending"
@@ -42,7 +42,18 @@
         </div>
 
         <div style="margin-top : 40px;">
-            <text-area class="mb-2" :content="pending.description"></text-area>         
+
+            <v-textarea
+            
+            v-model="pending.description"
+            hide-details
+            filled
+            auto-grow
+            label="Comments"
+            rows="2"
+            row-height="20"
+            ></v-textarea>
+
             <div class="d-flex justify-space-between mb-1 mt-1">
                 <div class="delete-pending" @click="$emit('delete-pending')">
                     <i class="fas fa-trash"></i>
@@ -63,12 +74,11 @@
 
 <script>
 import chkbox from './chkbox'
-import TextArea from './TextArea'
 import PendingInput from './PendingInput'
 
 export default {
     name : 'pending',
-    components : {chkbox, TextArea, PendingInput},
+    components : {chkbox, PendingInput},
     props : {
         pending : Object,
         list : {
@@ -108,6 +118,7 @@ export default {
 
         pushPending(pending){
             this.pending.children.push(pending)
+            this.$emit('info-changed')
         },
 
         deletePending(index){
@@ -123,7 +134,9 @@ export default {
                 return 'crossed'
             }
             return ''
-        }
+        },
+
+
     },
 
     mounted(){

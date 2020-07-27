@@ -39,6 +39,13 @@ export default {
     }
   },
 
+  watch : {
+    textAreaContent(){
+      console.log('text area changed')
+      console.log(this.content)
+    }
+  },
+
   methods : {
     focusTextArea(){
       this.textArea.focus()
@@ -53,7 +60,6 @@ export default {
 
   mounted(){
     this.textArea = this.$el.getElementsByTagName('textarea')[0]
-    this.textAreaContent = this.content
   }
 }
 </script>
